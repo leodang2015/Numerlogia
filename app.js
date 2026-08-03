@@ -1,16 +1,17 @@
 import express from "express";
 import dotenv from "dotenv";
 
-// 1. Cargar variables de entorno
 dotenv.config();
 
-// 2. Importar la función desde la carpeta DataBase
 import { x } from "./DataBase/cnxmongo.js";
 
 const app = express();
 
-// 3. Conectar a MongoDB
 x();
+
+import dns from "dns";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const PORT = process.env.PORT;
 
