@@ -16,9 +16,10 @@ import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-router.get("/", validarJWT, listarNumerologyProfiles);
+router.get("/", listarNumerologyProfiles);
+router.get("/:id", idValidator, validarCampos, obtenerNumerologyProfile);
+
 router.post("/", validarJWT, crearNumerologyProfileValidator, validarCampos, crearNumerologyProfile);
-router.get("/:id", validarJWT, idValidator, validarCampos, obtenerNumerologyProfile);
 router.put("/:id", validarJWT, idValidator, actualizarNumerologyProfileValidator, validarCampos, actualizarNumerologyProfile);
 router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarNumerologyProfile);
 
