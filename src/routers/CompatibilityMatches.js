@@ -16,9 +16,10 @@ import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-router.get("/", validarJWT, listarCompatibilityMatches);
+router.get("/", listarCompatibilityMatches);
+router.get("/:id", idValidator, validarCampos, obtenerCompatibilityMatch);
+
 router.post("/", validarJWT, crearCompatibilityMatchValidator, validarCampos, crearCompatibilityMatch);
-router.get("/:id", validarJWT, idValidator, validarCampos, obtenerCompatibilityMatch);
 router.put("/:id", validarJWT, idValidator, actualizarCompatibilityMatchValidator, validarCampos, actualizarCompatibilityMatch);
 router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarCompatibilityMatch);
 
