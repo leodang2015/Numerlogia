@@ -12,13 +12,17 @@ import {
   idValidator 
 } from "../validators/Users.js";
 import { validarCampos } from "../middlewares/validarCampos.js";
+import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-router.get("/", listarUsuarios);
+// Rutas protegidas
+router.get("/", validarJWT, listarUsuarios);
+router.get("/:id", validarJWT, idValidator, validarCampos, obtenerUsuario);
+router.put("/:id", validarJWT, idValidator, actualizarUserValidator, validarCampos, actualizarUsuario);
+router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarUsuario);
+
+// Registro público de usuario
 router.post("/", crearUserValidator, validarCampos, crearUsuario);
-router.get("/:id", idValidator, validarCampos, obtenerUsuario);
-router.put("/:id", idValidator, actualizarUserValidator, validarCampos, actualizarUsuario);
-router.delete("/:id", idValidator, validarCampos, eliminarUsuario);
 
 export default router;
