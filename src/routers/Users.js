@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { 
   crearUsuario, 
+  loginUsuario, 
   listarUsuarios, 
   obtenerUsuario, 
   actualizarUsuario, 
@@ -10,19 +11,18 @@ import {
   crearUserValidator, 
   actualizarUserValidator, 
   idValidator 
-} from "../validators/Users.js";
+} from "../validators/Users.js"; 
 import { validarCampos } from "../middlewares/validarCampos.js";
 import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-// Rutas protegidas
+router.post("/", crearUserValidator, validarCampos, crearUsuario);
+router.post("/login", loginUsuario); 
+
 router.get("/", validarJWT, listarUsuarios);
 router.get("/:id", validarJWT, idValidator, validarCampos, obtenerUsuario);
 router.put("/:id", validarJWT, idValidator, actualizarUserValidator, validarCampos, actualizarUsuario);
 router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarUsuario);
-
-// Registro público de usuario
-router.post("/", crearUserValidator, validarCampos, crearUsuario);
 
 export default router;
