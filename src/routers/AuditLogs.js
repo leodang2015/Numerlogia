@@ -16,11 +16,12 @@ import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
+router.use(validarJWT);
 
-router.get("/", validarJWT, listarAuditLogs);
-router.post("/", validarJWT, crearAuditLogValidator, validarCampos, crearAuditLog);
-router.get("/:id", validarJWT, idValidator, validarCampos, obtenerAuditLog);
-router.put("/:id", validarJWT, idValidator, actualizarAuditLogValidator, validarCampos, actualizarAuditLog);
-router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarAuditLog);
+router.get("/", listarAuditLogs);
+router.get("/:id", idValidator, validarCampos, obtenerAuditLog);
+router.post("/", crearAuditLogValidator, validarCampos, crearAuditLog);
+router.put("/:id", idValidator, actualizarAuditLogValidator, validarCampos, actualizarAuditLog);
+router.delete("/:id", idValidator, validarCampos, eliminarAuditLog);
 
 export default router;
