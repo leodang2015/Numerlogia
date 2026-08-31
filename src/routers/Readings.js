@@ -16,9 +16,10 @@ import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-router.get("/", validarJWT, listarReadings);
+router.get("/", listarReadings);
+router.get("/:id", idValidator, validarCampos, obtenerReading);
+
 router.post("/", validarJWT, crearReadingValidator, validarCampos, crearReading);
-router.get("/:id", validarJWT, idValidator, validarCampos, obtenerReading);
 router.put("/:id", validarJWT, idValidator, actualizarReadingValidator, validarCampos, actualizarReading);
 router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarReading);
 
