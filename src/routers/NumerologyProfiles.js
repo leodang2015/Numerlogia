@@ -12,13 +12,14 @@ import {
   idValidator 
 } from "../validators/NumerologyProfiles.js";
 import { validarCampos } from "../middlewares/validarCampos.js";
+import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
-router.get("/", listarNumerologyProfiles);
-router.post("/", crearNumerologyProfileValidator, validarCampos, crearNumerologyProfile);
-router.get("/:id", idValidator, validarCampos, obtenerNumerologyProfile);
-router.put("/:id", idValidator, actualizarNumerologyProfileValidator, validarCampos, actualizarNumerologyProfile);
-router.delete("/:id", idValidator, validarCampos, eliminarNumerologyProfile);
+router.get("/", validarJWT, listarNumerologyProfiles);
+router.post("/", validarJWT, crearNumerologyProfileValidator, validarCampos, crearNumerologyProfile);
+router.get("/:id", validarJWT, idValidator, validarCampos, obtenerNumerologyProfile);
+router.put("/:id", validarJWT, idValidator, actualizarNumerologyProfileValidator, validarCampos, actualizarNumerologyProfile);
+router.delete("/:id", validarJWT, idValidator, validarCampos, eliminarNumerologyProfile);
 
 export default router;
