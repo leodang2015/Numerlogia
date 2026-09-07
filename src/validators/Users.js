@@ -31,6 +31,17 @@ export const crearUserValidator = [
     .isISO8601().withMessage("La fecha de registro debe tener un formato ISO8601 válido")
 ];
 
+export const loginUserValidator = [
+  body("email")
+    .trim()
+    .notEmpty().withMessage("El email es obligatorio")
+    .isEmail().withMessage("Debe proporcionar un correo electrónico válido")
+    .normalizeEmail(),
+
+  body("password_hash")
+    .notEmpty().withMessage("La contraseña es obligatoria")
+];
+
 export const actualizarUserValidator = [
   body("nombre_completo")
     .optional()
