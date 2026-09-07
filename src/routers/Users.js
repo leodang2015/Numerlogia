@@ -9,6 +9,7 @@ import {
 } from "../controllers/Users.js";
 import { 
   crearUserValidator, 
+  loginUserValidator,
   actualizarUserValidator, 
   idValidator 
 } from "../validators/Users.js"; 
@@ -18,8 +19,10 @@ import { validarJWT } from "../middlewares/Webtoken.js";
 const router = Router();
 
 router.post("/", crearUserValidator, validarCampos, crearUsuario);
-router.post("/login", loginUsuario); 
 
+router.post("/login", loginUserValidator, validarCampos, loginUsuario); 
+
+// Rutas protegidas que requieren Token JWT válido
 router.get("/", validarJWT, listarUsuarios);
 router.get("/:id", validarJWT, idValidator, validarCampos, obtenerUsuario);
 router.put("/:id", validarJWT, idValidator, actualizarUserValidator, validarCampos, actualizarUsuario);
