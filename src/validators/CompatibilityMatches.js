@@ -1,9 +1,16 @@
 import { body, param } from "express-validator";
+import User from "../models/Users.js"; 
 
 export const crearCompatibilityMatchValidator = [
   body("usuario_id_1")
     .notEmpty().withMessage("El usuario_id_1 es obligatorio")
-    .isMongoId().withMessage("El usuario_id_1 debe ser un ObjectId de MongoDB válido"),
+    .isMongoId().withMessage("El usuario_id_1 debe ser un ObjectId de MongoDB válido")
+    .custom(async (id) => {
+      const userExists = await User.findById(id);
+      if (!userExists) {
+        throw new Error("El usuario_id_1 referenciado no existe");
+      }
+    }),
 
   body("usuario_id_2")
     .notEmpty().withMessage("El usuario_id_2 es obligatorio")
@@ -13,6 +20,12 @@ export const crearCompatibilityMatchValidator = [
         throw new Error("El usuario_id_2 no puede ser igual al usuario_id_1");
       }
       return true;
+    })
+    .custom(async (id) => {
+      const userExists = await User.findById(id);
+      if (!userExists) {
+        throw new Error("El usuario_id_2 referenciado no existe");
+      }
     }),
 
   body("puntaje_calculado")
@@ -28,7 +41,15 @@ export const crearCompatibilityMatchValidator = [
 export const actualizarCompatibilityMatchValidator = [
   body("usuario_id_1")
     .optional()
-    .isMongoId().withMessage("El usuario_id_1 debe ser un ObjectId de MongoDB válido"),
+    .isMongoId().withMessage("El usuario_id_1 debe ser un ObjectId de MongoDB válido")
+    .custom(async (id) => {
+      if (id) {
+        const userExists = await User.findById(id);
+        if (!userExists) {
+          throw new Error("El usuario_id_1 referenciado no existe");
+        }
+      }
+    }),
 
   body("usuario_id_2")
     .optional()
@@ -38,6 +59,14 @@ export const actualizarCompatibilityMatchValidator = [
         throw new Error("El usuario_id_2 no puede ser igual al usuario_id_1");
       }
       return true;
+    })
+    .custom(async (id) => {
+      if (id) {
+        const userExists = await User.findById(id);
+        if (!userExists) {
+          throw new Error("El usuario_id_2 referenciado no existe");
+        }
+      }
     }),
 
   body("puntaje_calculado")
