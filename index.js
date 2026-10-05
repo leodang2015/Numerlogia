@@ -1,4 +1,4 @@
-import "dotenv/config"; // 1. Siempre en la primerísima línea para cargar variables de entorno antes de cualquier otro import
+import "dotenv/config";
 
 import express from "express";
 import { x } from "./src/DataBase/cnxmongo.js";
@@ -11,26 +11,24 @@ import ReadingsRoutes from "./src/routers/Readings.js";
 import AuditLogsRoutes from "./src/routers/AuditLogs.js";
 
 const app = express();
-const PORT = process.env.PORT || 1799; // Fallback por si process.env.PORT no está definido
+const PORT = process.env.PORT || 1799; 
 
-// 2. Middlewares globales
+
 app.use(express.json());
 
-// 3. Definición de rutas principales
+
 app.use("/api/v1/users", UsersRoutes);
 app.use("/api/v1/numerology-profiles", NumerologyProfilesRoutes);
 app.use("/api/v1/compatibility-matches", CompatibilityMatchesRoutes);
 app.use("/api/v1/readings", ReadingsRoutes);
 app.use("/api/v1/audit-logs", AuditLogsRoutes);
 
-// 4. Middleware para capturar rutas no encontradas (Evita la respuesta HTML/texto plano por defecto de Express - Reto 3.4)
 app.use((req, res) => {
     res.status(404).json({
         mensaje: "La ruta o método solicitado no existe en el servidor"
     });
 });
 
-// 5. Middleware global de gestión de errores con 4 parámetros (Reto 4.4)
 app.use((err, req, res, next) => {
     console.error("🔥 Error no controlado:", err.stack);
     res.status(500).json({
