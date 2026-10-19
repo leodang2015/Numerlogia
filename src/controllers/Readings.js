@@ -1,4 +1,6 @@
 import Reading from "../models/Readings.js";
+import NumerologyProfile from "../models/NumerologyProfiles.js";
+import { generarLecturaNumerologica, MODELO_GEMINI } from "../services/GeminiReading.js";
 
 
 export const crearReading = async (req, res) => {
@@ -23,6 +25,56 @@ export const crearReading = async (req, res) => {
             mensaje: "Error al crear lectura",
             error: error.message
         });
+    }
+};
+
+export const generarReading = async (req, res, next) => {
+    const { perfil_id, tipo_lectura } = req.body;
+
+    try {
+        const perfil = await NumerologyProfile.findOne({
+            _id: perfil_id,
+            usuario_id: req.usuario._id
+        });
+
+        if (!perfil) {
+            return res.status(404).json({ mensaje: "Perfil numerológico no encontrado" });
+        }
+
+        const lecturaExistente = await Reading.findOne({
+            usuario_id: req.usuario._id,
+            perfil_id: perfil._id,
+            tipo_lectura,
+            modelo: MODELO_GEMINI
+        });
+
+        if (lecturaExistente) {
+            return res.status(200).json({ ...lecturaExistente.toObject(), cache: true });
+        }
+
+        let resultado;
+        try {
+            resultado = await generarLecturaNumerologica(perfil, tipo_lectura);
+        } catch (error) {
+            console.error("Error al generar lectura con Gemini:", error);
+            return res.status(503).json({
+                mensaje: "No se pudo generar la lectura en este momento. Inténtalo de nuevo más tarde."
+            });
+        }
+
+        const reading = await Reading.create({
+            prompt: `Lectura numerológica: ${tipo_lectura}`,
+            respuesta: resultado.datos,
+            tipo_lectura,
+            usuario_id: req.usuario._id,
+            perfil_id: perfil._id,
+            modelo: resultado.modelo,
+            tokens_usados: resultado.tokens_usados
+        });
+
+        return res.status(201).json({ ...reading.toObject(), cache: false });
+    } catch (error) {
+        return next(error);
     }
 };
 

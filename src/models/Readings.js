@@ -8,9 +8,8 @@ const readingSchema = new mongoose.Schema(
             trim: true,
         },
         respuesta: {
-            type: String,
+            type: mongoose.Schema.Types.Mixed,
             required: [true, "La respuesta es obligatoria"],
-            trim: true,
         },
         tipo_lectura: {
             type: String,
@@ -20,6 +19,22 @@ const readingSchema = new mongoose.Schema(
         fecha: {
             type: Date,
             default: Date.now,
+        },
+        usuario_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        perfil_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "NumerologyProfile",
+        },
+        modelo: {
+            type: String,
+            trim: true,
+        },
+        tokens_usados: {
+            type: Number,
+            min: 0,
         },
     },
     { timestamps: true }

@@ -1,21 +1,24 @@
 import { Router } from "express";
-import { 
-  crearReading, 
-  listarReadings, 
-  obtenerReading, 
-  actualizarReading, 
-  eliminarReading 
+import {
+  crearReading,
+  generarReading,
+  listarReadings,
+  obtenerReading,
+  actualizarReading,
+  eliminarReading
 } from "../controllers/Readings.js";
-import { 
-  crearReadingValidator, 
-  actualizarReadingValidator, 
-  idValidator 
+import {
+  crearReadingValidator,
+  generarReadingValidator,
+  actualizarReadingValidator,
+  idValidator
 } from "../validators/Readings.js";
 import { validarCampos } from "../middlewares/validarCampos.js";
 import { validarJWT } from "../middlewares/Webtoken.js";
 
 const router = Router();
 
+router.post("/generate", validarJWT, generarReadingValidator, validarCampos, generarReading);
 router.get("/", listarReadings);
 router.get("/:id", idValidator, validarCampos, obtenerReading);
 

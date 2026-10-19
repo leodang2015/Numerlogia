@@ -46,3 +46,13 @@ export const idValidator = [
   param("id")
     .isMongoId().withMessage("El id proporcionado no es un ObjectId válido de MongoDB")
 ];
+
+export const generarReadingValidator = [
+  body("perfil_id")
+    .isMongoId().withMessage("El perfil_id debe ser un ObjectId válido"),
+
+  body("tipo_lectura")
+    .trim()
+    .isIn(["general", "amor", "trabajo", "proposito"])
+    .withMessage("El tipo de lectura debe ser general, amor, trabajo o proposito")
+];
